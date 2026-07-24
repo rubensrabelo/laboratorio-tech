@@ -1,7 +1,15 @@
 # Microservices na prática com Java Spring
 
 ## Descrição
+
+(Vídeo 01)
 Este projeto demonstra a construção de uma arquitetura de microsserviços baseada em Java e *Spring Boot*. O objetivo principal é implementar dois serviços independentes (**User** e **Email**) que se comunicam de forma assíncrona utilizando o *RabbitMQ* como *broker* de mensageria para processar o envio de e-mails de boas-vindas após o cadastro de usuários.
+
+
+(Vídeo 02)
+
+
+(Vídeo 03)
 
 ## Implementação
 O fluxo segue um modelo de comunicação por comandos, onde o serviço de usuários atua como *producer* e o serviço de e-mails como *consumer*.
@@ -44,13 +52,21 @@ style Plataforma fill:#f5f5f5,stroke:#333
 * **Banco de Dados:** PostgreSQL (uma base por microserviço)
 * **Integração:** Spring AMQP, Spring Mail (SMTP Gmail)
 
-## Referência
-Vídeo original: [Microservices na prática com Java Spring](https://www.youtube.com/watch?v=wlYvA2b1BWI) por *Michelli Brito*.
+## Sugestão de Evolução
+(Vídeo 01)
+(Vídeo 02)
+(Vídeo 03)
 
+## Referência
+01. Vídeo original: [Microservices na prática com Java Spring](https://www.youtube.com/watch?v=wlYvA2b1BWI) por *Michelli Brito*.
 
 ## O que eu fiz de diferente?
 
+(Vídeo 01)
 - Implementei o Flyway
 - Criei .env para guardar variáveis sensiveis
 - Criei arquivos .sh para facilitar rodar os ms user e ms email
 - Criei DTOS de criação e de resposta e fiz um mapper
+
+(Vídeo 02)
+(Vídeo 03)
