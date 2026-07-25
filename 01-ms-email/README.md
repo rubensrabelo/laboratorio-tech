@@ -69,4 +69,7 @@ style Plataforma fill:#f5f5f5,stroke:#333
 - Criei DTOS de criação e de resposta e fiz um mapper
 
 (Vídeo 02)
+- Add nos dois microsserviços
+- deixei de forma assicrono e enviei os logs para cloud amqp
+
 (Vídeo 03)

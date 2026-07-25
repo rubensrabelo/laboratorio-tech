@@ -46,6 +46,13 @@ app:
       queue: "default.email"
       exchange: "email.exchange"
       routing-key: "email.routing.key"
+  logging:
+    exchange: logs.exchange
+    routing-key: microsservico.email.logs
+
+logging:
+  level:
+    root: info
 
 server:
   port: 8082
