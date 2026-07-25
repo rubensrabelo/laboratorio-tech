@@ -1,8 +1,16 @@
 package com.ms.user.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.StringLayout;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,19 +34,19 @@ public class LavinMqConfig {
     }
 
     @Bean
-    org.springframework.boot.CommandLineRunner setupLogBridge(org.springframework.amqp.rabbit.core.RabbitTemplate rabbitTemplate) {
+    CommandLineRunner setupLogBridge(RabbitTemplate rabbitTemplate) {
         return args -> {
             try {
-                org.apache.logging.log4j.core.LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) org.apache.logging.log4j.LogManager.getContext(false);
+                LoggerContext context = (LoggerContext) LogManager.getContext(false);
                 org.apache.logging.log4j.core.config.Configuration config = context.getConfiguration();
-                org.apache.logging.log4j.core.Appender consoleAppender = config.getAppender("Console");
+                Appender consoleAppender = config.getAppender("Console");
 
                 if (rabbitTemplate != null && consoleAppender != null) {
-                    org.apache.logging.log4j.core.StringLayout stringLayout = (org.apache.logging.log4j.core.StringLayout) consoleAppender.getLayout();
+                    StringLayout stringLayout = (StringLayout) consoleAppender.getLayout();
                     
-                    org.apache.logging.log4j.core.appender.AbstractAppender amqpBridge = new org.apache.logging.log4j.core.appender.AbstractAppender("LavinMQBridge", null, stringLayout, false, null) {
+                    AbstractAppender amqpBridge = new AbstractAppender("LavinMQBridge", null, stringLayout, false, null) {
                         @Override
-                        public void append(org.apache.logging.log4j.core.LogEvent event) {
+                        public void append(LogEvent event) {
                             if (event != null && event.getMessage() != null) {
                                 try {
                                     String logJson = new String(getLayout().toByteArray(event)).trim();
