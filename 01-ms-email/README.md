@@ -54,7 +54,27 @@ style Plataforma fill:#f5f5f5,stroke:#333
 
 ## Sugestão de Evolução
 (Vídeo 01)
+Durante o vídeo, a autora apresenta diversas sugestões de melhorias e boas práticas para a evolução dos microservices implementados. Abaixo, listo as principais recomendações mencionadas:
+1. **Expansão do Modelo de Usuário:**
+   * **Descrição:** A autora sugere que o *User Model* seja enriquecido com atributos adicionais para tornar o sistema mais completo, como endereço completo, *username*, senha e categoria de usuário.
+
+2. **Implementação de um CRUD Completo:**
+   * **Descrição:** Como o objetivo principal do vídeo foi demonstrar a comunicação assíncrona, foi implementado apenas o método *POST*. Ela recomenda a criação de métodos *GET* (para listagem e busca), *PUT* (para atualização) e *DELETE* (para exclusão) para compor um ciclo de vida real da aplicação.
+
+3. **Validações de Negócio Adicionais:**
+   * **Descrição:** É sugerida a implementação de verificações de integridade, como checar se o e-mail já existe na base de dados antes de persistir um novo usuário, evitando duplicações.
+
+4. **Uso de Interfaces nos Services:**
+   * **Descrição:** Como boa prática de arquitetura (alinhada à arquitetura hexagonal), ela recomenda utilizar **interfaces** nos *Services* em vez de depender diretamente das classes concretas. Isso garante um maior desacoplamento entre as camadas do sistema.
+
+5. **Exploração de Padrões de Comunicação:**
+   * **Descrição:** A autora reforça que a mensageria via comandos é apenas um caminho. Ela sugere o estudo de outros padrões essenciais para arquiteturas distribuídas, como:
+      * Comunicação via **Eventos** (*Event Notification* e *Event State Transfer*).
+      * Implementação de **Sagas** (utilizando orquestração ou coreografia) para gerenciar fluxos de trabalho complexos e garantir a consistência dos dados.
+
 (Vídeo 02)
+
+
 (Vídeo 03)
 
 ## Referência
