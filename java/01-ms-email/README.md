@@ -18,10 +18,6 @@ Cada microsserviço utiliza o **Log4j2** para gerar logs estruturados em formato
 
 Após a inicialização da aplicação, esse componente captura os eventos gerados pelo Log4j2 e os publica de forma assíncrona, utilizando o **RabbitTemplate**, em uma **Exchange** exclusiva para logs. Todos os registros são encaminhados para uma fila central (`central-logs-queue`), permitindo concentrar os logs dos microsserviços **User** e **Email** em um único ponto de observabilidade.
 
-### Vídeo 03
-
-*(Em desenvolvimento.)*
-
 ---
 
 ## Implementação
@@ -129,10 +125,6 @@ Também adaptei a implementação apresentada no curso para um cenário com múl
 > **Nota Arquitetural**
 >
 > A solução implementada realiza alocações temporárias de strings durante a captura dos eventos de log. Embora essa abordagem atenda adequadamente aplicações de pequeno e médio porte, uma evolução futura consiste em utilizar agentes externos de coleta de logs, como **Fluent Bit** ou **Logstash**, responsáveis por capturar diretamente a saída padrão (`SYSTEM_OUT`) da aplicação, reduzindo a pressão sobre o Garbage Collector (GC) e desacoplando completamente a infraestrutura de observabilidade da aplicação.
-
-### Vídeo 03
-
-*(Em desenvolvimento.)*
 
 ---
 
