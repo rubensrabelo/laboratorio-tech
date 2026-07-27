@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: event
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  
+  rabbitmq:
+    addresses: ${URL_AMQP_CLOUD}
+    connection-timeout: 5000
+    template:
+      retry:
+        enabled: true
+        initial-interval: 2s
+        max-retries: 3
+
+app:
+  lavinmq:
+    email:
+      exchange: "email.exchange"
+      routing-key: "email.routing.key"
+
+logging:
+  level:
+    root: info
+
+server:
+  port: 8081
+  servlet:
+    context-path: /api/v1
