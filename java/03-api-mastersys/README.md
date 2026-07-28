@@ -11,6 +11,7 @@ Sistema para gerenciamento de acadêmias
 - Adicionei o .env
 - Usei docker compose p/ o postgres
 - Criei .sh para rodar e destruir o container e o spring
+- Exceções personalizadas
 
 ## Referências
 

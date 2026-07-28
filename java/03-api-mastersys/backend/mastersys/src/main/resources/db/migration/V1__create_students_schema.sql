@@ -5,7 +5,7 @@ CREATE TABLE students (
     gender VARCHAR(1) CHECK (gender IN ('M', 'F')),
     phone VARCHAR(30),
     cell_phone VARCHAR(30),
-    email VARCHAR(150),
+    email VARCHAR(150) UNIQUE,
     observation TEXT,
     address VARCHAR(150),
     number VARCHAR(20),
