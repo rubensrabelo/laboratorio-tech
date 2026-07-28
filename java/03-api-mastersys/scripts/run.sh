@@ -2,7 +2,7 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-ACADEMY_DIR="$ROOT_DIR/apps/backend/mastersys"
+ACADEMY_DIR="$ROOT_DIR/backend/mastersys"
 
 if [ -f "$ACADEMY_DIR/.env" ]; then
     echo "Carregando variaveis de ambiente do .env..."
