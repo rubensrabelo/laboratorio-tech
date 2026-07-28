@@ -8,13 +8,6 @@ O objetivo não é apenas aprender uma tecnologia, mas compreender diferentes á
 
 ---
 
-## Objetivo
-
-Este repositório foi criado para registrar minha evolução como desenvolvedor por meio de estudos contínuos e projetos práticos.
-Cada projeto procura aplicar os conceitos estudados em uma implementação prática, servindo como material de consulta e acompanhamento da minha evolução técnica.
-
----
-
 ## Organização do repositório
 
 Os estudos são organizados por área de conhecimento. Cada diretório possui um README próprio contendo a descrição dos projetos, tecnologias utilizadas e os principais aprendizados.
