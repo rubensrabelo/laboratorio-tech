@@ -1,14 +1,6 @@
 package models
 
-import (
-	"errors"
-	"github.com/google/uuid"
-)
-
-var (
-	ErrFieldsRequired = errors.New("nome e email sao obrigatorios")
-	ErrEmailExists    = errors.New("email ja cadastrado")
-)
+import "github.com/google/uuid"
 
 type User struct {
 	ID    uuid.UUID `json:"id"`

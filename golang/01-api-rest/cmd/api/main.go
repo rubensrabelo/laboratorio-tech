@@ -8,6 +8,7 @@ import (
 	"rest-api-2/internal/repositories"
 	"rest-api-2/internal/usecases"
 	"rest-api-2/internal/web/middleware"
+	"rest-api-2/internal/web/router"
 )
 
 func main() {
@@ -20,16 +21,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			handler.Create(w, r)
-		case http.MethodGet:
-			handler.List(w, r)
-		default:
-			http.Error(w, "Metodo nao permitido", http.StatusMethodNotAllowed)
-		}
-	})
+	router.RegisterUserRoutes(mux, handler)
 
 	mainHandler := middleware.Logger(mux)
 
