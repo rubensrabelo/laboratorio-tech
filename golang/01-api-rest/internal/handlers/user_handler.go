@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"rest-api-2/internal/usecases"
 )
@@ -25,12 +26,14 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var input usecases.CreateUserInputDTO
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		slog.Error("Falha ao decodificar JSON de entrada", "error", err.Error())
 		http.Error(w, "JSON invalido", http.StatusBadRequest)
 		return
 	}
 
 	user, err := h.useCase.Create(input)
 	if err != nil {
+		slog.Error("Falha ao criar usuário no usecase", "error", err.Error())
 		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}

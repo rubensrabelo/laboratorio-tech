@@ -15,7 +15,7 @@ Os estudos são organizados por área de conhecimento. Cada diretório possui um
 | Pasta | Descrição |
 | :----- | :-------- |
 | **java/** | Projetos e estudos utilizando Java e Spring Boot. |
-| **nodejs/** | Projetos e estudos utilizando Node.js. *(Em desenvolvimento)* |
+| **golang/** | Projetos e estudos utilizando Golang. |
 | **python/** | Projetos e estudos utilizando Python. *(Em desenvolvimento)* |
 | **livros/** | Resumos, anotações e implementações baseadas em livros técnicos. *(Em desenvolvimento)* |
 

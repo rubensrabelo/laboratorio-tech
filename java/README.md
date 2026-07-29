@@ -14,7 +14,4 @@ Este repositório tem como objetivo documentar minha evolução no ecossistema J
 
 ## Projetos
 
-| Pasta | Descrição | Saiba mais |
-| :----- | :-------- | :--------- |
-| **01-ms-email** | Arquitetura de microsserviços utilizando comunicação assíncrona com RabbitMQ, envio de e-mails, centralização de logs, observabilidade e boas práticas de desenvolvimento com Spring Boot. | [README](./01-ms-email/README.md) |
-| **02-ms-eventos-email** | Arquitetura de microsserviços para gerenciamento de eventos, utilizando mensageria assíncrona, persistência de dados, versionamento de banco e organização da camada de exceções. | [README](./02-ms-eventos-email/README.md) |
+Cada projeto tem o seu próprio README.md o que vai detalhar o que foi feito.
