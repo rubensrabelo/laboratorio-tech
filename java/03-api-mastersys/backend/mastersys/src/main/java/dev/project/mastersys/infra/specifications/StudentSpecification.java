@@ -1,4 +1,4 @@
-package dev.project.mastersys.infra.specification;
+package dev.project.mastersys.infra.specifications;
 
 import dev.project.mastersys.application.dtos.StudentFilterRequestDTO;
 import dev.project.mastersys.domain.Student;

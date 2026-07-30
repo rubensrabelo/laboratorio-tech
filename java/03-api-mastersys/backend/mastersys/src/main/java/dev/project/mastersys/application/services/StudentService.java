@@ -9,7 +9,7 @@ import dev.project.mastersys.exceptions.domain.BusinessRuleException;
 import dev.project.mastersys.exceptions.domain.DataIntegrityViolationException;
 import dev.project.mastersys.exceptions.domain.ResourceNotFoundException;
 import dev.project.mastersys.infra.repositories.StudentRepository;
-import dev.project.mastersys.infra.specification.StudentSpecification;
+import dev.project.mastersys.infra.specifications.StudentSpecification;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
