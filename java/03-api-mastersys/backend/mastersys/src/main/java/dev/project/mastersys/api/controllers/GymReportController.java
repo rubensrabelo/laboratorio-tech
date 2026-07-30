@@ -1,5 +1,6 @@
 package dev.project.mastersys.api.controllers;
 
+import dev.project.mastersys.api.docs.GymReportDoc;
 import dev.project.mastersys.application.dtos.MonthlyBillingResponseDTO;
 import dev.project.mastersys.application.dtos.OpenInvoicesResponseDTO;
 import dev.project.mastersys.application.dtos.StudentsByCityResponseDTO;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reports")
-public class GymReportController {
+public class GymReportController implements GymReportDoc {
 
     private final GymReportService gymReportService;
 

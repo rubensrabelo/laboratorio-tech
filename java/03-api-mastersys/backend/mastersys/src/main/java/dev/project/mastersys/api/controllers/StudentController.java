@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.project.mastersys.api.docs.StudentDoc;
 import dev.project.mastersys.application.dtos.StudentFilterRequestDTO;
 import dev.project.mastersys.application.dtos.StudentRequestDTO;
 import dev.project.mastersys.application.dtos.StudentResponseDTO;
@@ -20,7 +21,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("students")
-public class StudentController {
+public class StudentController implements StudentDoc {
 
     private final StudentService studentService;
 
@@ -29,6 +30,7 @@ public class StudentController {
     }
 
     @GetMapping
+    @Override
     public ResponseEntity<Page<StudentResponseDTO>> findAll(
             StudentFilterRequestDTO filter,
             org.springframework.data.domain.Pageable pageable) {
