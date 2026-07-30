@@ -1,5 +1,6 @@
 package dev.project.mastersys.application.services;
 
+import dev.project.mastersys.application.dtos.StudentFilterRequestDTO;
 import dev.project.mastersys.application.dtos.StudentRequestDTO;
 import dev.project.mastersys.application.dtos.StudentResponseDTO;
 import dev.project.mastersys.application.mapper.StudentMapper;
@@ -8,8 +9,11 @@ import dev.project.mastersys.exceptions.domain.BusinessRuleException;
 import dev.project.mastersys.exceptions.domain.DataIntegrityViolationException;
 import dev.project.mastersys.exceptions.domain.ResourceNotFoundException;
 import dev.project.mastersys.infra.repositories.StudentRepository;
+import dev.project.mastersys.infra.specification.StudentSpecification;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
@@ -26,8 +30,11 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<StudentResponseDTO> findAll(Pageable pageable) {
-        return studentRepository.findAll(pageable)
+    public Page<StudentResponseDTO> findAll(StudentFilterRequestDTO filter, Pageable pageable) {
+        Specification<Student> spec = 
+                StudentSpecification.withFilters(filter);
+                
+        return studentRepository.findAll(spec, pageable)
                 .map(studentMapper::toDto);
     }
 

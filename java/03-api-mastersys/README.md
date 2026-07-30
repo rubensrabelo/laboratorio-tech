@@ -6,6 +6,7 @@ Sistema para gerenciamento de acadêmias
 
 ## O que eu aprendi?
 - Revisei alguns temas do framework
+- Aprendi sobre o Specification - é uma ferramenta usada para criar filtros de busca dinâmicos e reutilizáveis
 
 ## O que eu fiz de diferente?
 - Adicionei o .env
