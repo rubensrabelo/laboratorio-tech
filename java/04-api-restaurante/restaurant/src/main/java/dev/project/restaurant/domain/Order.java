@@ -23,7 +23,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "table_id", nullable = false)
-    private TableDomain table;
+    private RestaurantTable table;
 
     @CreationTimestamp
     @Column(name = "opened_at", nullable = false, updatable = false)
