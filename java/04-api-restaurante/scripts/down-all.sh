@@ -4,7 +4,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 BACKEND_DIR="$ROOT_DIR/restaurant"
 
-echo "Parando e removendo containers do MasterSys..."
+echo "Parando e removendo containers..."
 
 if [ -d "$BACKEND_DIR" ] && [ -f "$BACKEND_DIR/docker-compose.postgres.yml" ]; then
     cd "$BACKEND_DIR" || exit 1
