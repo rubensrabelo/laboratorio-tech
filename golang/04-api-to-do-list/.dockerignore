@@ -1,0 +1,17 @@
+# Git
+.git
+.gitignore
+
+# Banco de dados e Docker locais
+.docker-data/
+postgres_data/
+
+# Binários locais e arquivos de teste
+*.test
+*.out
+server
+
+# Logs e IDEs
+.idea/
+.vscode/
+*.log
