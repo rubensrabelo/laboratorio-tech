@@ -7,7 +7,7 @@ import (
 
 	"github/lab/golang/api/todo/config"
 	"github/lab/golang/api/todo/internal/modules/task"
-	"github/lab/golang/api/todo/shared/database"
+	"github/lab/golang/api/todo/internal/infra/database"
 	"github/lab/golang/api/todo/shared/middleware"
 
 	"net/http"
@@ -26,11 +26,6 @@ func main() {
 	cfg, err := config.LoadEnv()
 	if err != nil {
 		slog.Error("falha ao carregar as configuracoes", "error", err)
-		os.Exit(1)
-	}
-
-	if err := database.RunMigrations(cfg); err != nil {
-		slog.Error("falha ao rodar migrations", "error", err)
 		os.Exit(1)
 	}
 
