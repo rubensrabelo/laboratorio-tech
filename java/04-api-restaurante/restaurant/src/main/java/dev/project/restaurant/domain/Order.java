@@ -39,4 +39,12 @@ public class Order {
 
     @Column(columnDefinition = "TEXT")
     private String notes;
+
+    public Long getTableId() {
+        return this.table != null ? this.table.getId() : null;
+    }
+
+    public Integer getTableNumber() {
+        return this.table != null ? this.table.getNumber() : null;
+    }
 }

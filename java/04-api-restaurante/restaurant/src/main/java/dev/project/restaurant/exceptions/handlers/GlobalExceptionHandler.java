@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.project.restaurant.exceptions.domain.BusinessException;
 import dev.project.restaurant.exceptions.domain.DataIntegrityViolationException;
 import dev.project.restaurant.exceptions.domain.ResourceNotFoundException;
 import dev.project.restaurant.exceptions.dtos.FieldErrorDTO;
@@ -27,6 +28,19 @@ public class GlobalExceptionHandler {
                                 LocalDateTime.now(),
                                 status.value(),
                                 "Resource Not Found",
+                                ex.getMessage(),
+                                request.getRequestURI());
+                return ResponseEntity.status(status).body(error);
+        }
+
+        @ExceptionHandler(BusinessException.class)
+        public ResponseEntity<StandardError> handleBusiness(BusinessException ex,
+                        HttpServletRequest request) {
+                HttpStatus status = HttpStatus.BAD_REQUEST;
+                StandardError error = new StandardError(
+                                LocalDateTime.now(),
+                                status.value(),
+                                "Business Rule Violation",
                                 ex.getMessage(),
                                 request.getRequestURI());
                 return ResponseEntity.status(status).body(error);
@@ -64,7 +78,6 @@ public class GlobalExceptionHandler {
                                 request.getRequestURI());
                 return ResponseEntity.status(status).body(error);
         }
-
 
         @ExceptionHandler(DataIntegrityViolationException.class)
         public ResponseEntity<StandardError> handleDataIntegrityViolation(DataIntegrityViolationException ex,

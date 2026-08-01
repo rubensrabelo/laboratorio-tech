@@ -41,4 +41,16 @@ public class OrderItem {
     @Column(nullable = false, length = 30)
     @Builder.Default
     private OrderItemStatus status = OrderItemStatus.PENDING;
+
+    public Long getOrderId() {
+        return this.order != null ? this.order.getId() : null;
+    }
+
+    public Long getProductId() {
+        return this.product != null ? this.product.getId() : null;
+    }
+
+    public String getProductName() {
+        return this.product != null ? this.product.getName() : null;
+    }
 }
