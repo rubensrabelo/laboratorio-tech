@@ -4,6 +4,7 @@ import dev.project.restaurant.domain.enums.OrderItemStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "order_items")
@@ -42,6 +43,15 @@ public class OrderItem {
     @Builder.Default
     private OrderItemStatus status = OrderItemStatus.PENDING;
 
+    @Column(name = "preparation_started_at")
+    private LocalDateTime preparationStartedAt;
+
+    @Column(name = "ready_at")
+    private LocalDateTime readyAt;
+
+    @Column(name = "delivered_at")
+    private LocalDateTime deliveredAt;
+
     public Long getOrderId() {
         return this.order != null ? this.order.getId() : null;
     }
@@ -52,5 +62,9 @@ public class OrderItem {
 
     public String getProductName() {
         return this.product != null ? this.product.getName() : null;
+    }
+
+    public Integer getOrderTableNumber() {
+        return this.order != null ? this.order.getTableNumber() : null;
     }
 }
