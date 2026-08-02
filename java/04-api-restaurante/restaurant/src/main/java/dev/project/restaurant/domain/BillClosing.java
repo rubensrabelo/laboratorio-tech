@@ -42,4 +42,12 @@ public class BillClosing {
     @CreationTimestamp
     @Column(name = "closed_at", nullable = false, updatable = false)
     private LocalDateTime closedAt;
+
+    public Long getOrderId() {
+        return this.order != null ? this.order.getId() : null;
+    }
+
+    public Integer getOrderTableNumber() {
+        return this.order != null ? this.order.getTableNumber() : null;
+    }
 }
