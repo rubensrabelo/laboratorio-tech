@@ -23,7 +23,6 @@ public class KitchenWorker {
 
     @Scheduled(fixedDelay = 60000)
     public void checkDelayedItems() {
-        // Usando a sua query otimizada com JOIN FETCH
         List<OrderItem> preparingItems = orderItemRepository.findItemsWithProductAndOrder(OrderItemStatus.PREPARING);
         
         for (OrderItem item : preparingItems) {

@@ -10,11 +10,13 @@ import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
-    List<OrderItem> findByOrderId(Long orderId);
+    @Query("SELECT o FROM OrderItem o WHERE o.order.id = :orderId")
+    List<OrderItem> findByOrderId(@Param("orderId") Long orderId);
 
     List<OrderItem> findByStatusOrderByIdAsc(OrderItemStatus status);
 
-    List<OrderItem> findByOrderIdAndStatusNot(Long orderId, OrderItemStatus status);
+    @Query("SELECT o FROM OrderItem o WHERE o.order.id = :orderId AND o.status <> :status")
+    List<OrderItem> findByOrderIdAndStatusNot(@Param("orderId") Long orderId, @Param("status") OrderItemStatus status);
 
     @Query("""
         SELECT i
