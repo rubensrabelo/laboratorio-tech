@@ -67,4 +67,8 @@ public class OrderItem {
     public Integer getOrderTableNumber() {
         return this.order != null ? this.order.getTableNumber() : null;
     }
+
+    public Integer getProductPreparationTimeMinutes() {
+        return this.product != null ? this.product.getPreparationTimeMinutes() : null;
+    }
 }
