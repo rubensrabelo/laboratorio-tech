@@ -4,10 +4,10 @@ import zipfile
 from io import StringIO
 from datetime import datetime
 from src.config.settings import settings
-from src.modules.vault.service import load_all_metadata
+from src.core.database import metadata_storage
 
 def generate_csv_report() -> str:
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     output = StringIO()
     writer = csv.writer(output)
     
@@ -28,7 +28,7 @@ def create_global_zip_backup() -> str:
     backup_filename = f"backup_{timestamp}.zip"
     backup_path = os.path.join(settings.storage.backups_dir, backup_filename)
     
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for d in docs:
             file_path = os.path.join(settings.storage.documents_dir, d["stored_name"])
@@ -42,7 +42,7 @@ def create_selective_project_backup(project_name: str) -> str:
     backup_filename = f"backup_project_{safe_project_name.replace(' ', '_')}_{timestamp}.zip"
     backup_path = os.path.join(settings.storage.backups_dir, backup_filename)
     
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     filtered_docs = [d for d in docs if d["project"].lower() == project_name.lower()]
     
     if not filtered_docs:

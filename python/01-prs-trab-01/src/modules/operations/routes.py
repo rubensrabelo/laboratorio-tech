@@ -5,7 +5,7 @@ from collections import Counter
 
 from src.config.settings import settings
 from src.core.logging_config import log_event
-from src.modules.vault.service import load_all_metadata
+from src.core.database import metadata_storage
 from src.core.security import calculate_sha256
 from src.modules.operations.service import generate_csv_report, create_global_zip_backup, create_selective_project_backup
 
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/operations", tags=["System Operations"])
 
 @router.get("/stats")
 def get_vault_statistics():
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     total_docs = len(docs)
     total_size = sum([d["size"] for d in docs])
     
@@ -31,7 +31,7 @@ def get_vault_statistics():
 
 @router.get("/integrity-check")
 def global_integrity_check():
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     verified = 0
     intact = 0
     altered = 0

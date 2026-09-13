@@ -10,7 +10,8 @@ from src.config.settings import settings
 from src.core.logging_config import log_event
 from src.core.security import calculate_sha256
 from src.modules.vault.models import DocumentMetadata, DocumentUpdate
-from src.modules.vault.service import load_all_metadata, save_all_metadata, save_secure_file
+from src.core.database import metadata_storage
+from src.modules.vault.service import save_secure_file
 
 router = APIRouter(prefix="/documents", tags=["Documents Vault"])
 
@@ -41,7 +42,7 @@ async def upload_document(
         log_event("ERROR", "UPLOAD_FAILED", "File exceeds size limit")
         raise HTTPException(status_code=400, detail="File size exceeds limit.")
 
-    metadata_list = load_all_metadata()
+    metadata_list = metadata_storage.get_all()
     next_id = max([doc["id"] for doc in metadata_list], default=0) + 1
     
     _, ext = os.path.splitext(file.filename)
@@ -75,7 +76,7 @@ async def upload_document(
         raise HTTPException(status_code=422, detail=e.errors())
 
     metadata_list.append(new_doc.model_dump())
-    save_all_metadata(metadata_list)
+    metadata_storage.sync_and_save(metadata_list)
     
     log_event("INFO", "UPLOAD", f"id={next_id} file={file.filename}")
     return new_doc
@@ -86,7 +87,7 @@ def list_documents(
     researcher: Optional[str] = Query(None),
     category: Optional[str] = Query(None)
 ):
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     if project:
         docs = [d for d in docs if project.lower() in d["project"].lower()]
     if researcher:
@@ -97,7 +98,7 @@ def list_documents(
 
 @router.get("/{id}", response_model=DocumentMetadata)
 def get_document_details(id: int):
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     for doc in docs:
         if doc["id"] == id:
             return doc
@@ -106,7 +107,7 @@ def get_document_details(id: int):
 
 @router.get("/{id}/download")
 def download_document(id: int):
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     for doc in docs:
         if doc["id"] == id:
             file_path = os.path.join(settings.storage.documents_dir, doc["stored_name"])
@@ -119,33 +120,33 @@ def download_document(id: int):
 
 @router.put("/{id}", response_model=DocumentMetadata)
 def update_document_metadata(id: int, payload: DocumentUpdate):
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     for doc in docs:
         if doc["id"] == id:
             update_data = payload.model_dump(exclude_unset=True)
             doc.update(update_data)
-            save_all_metadata(docs)
+            metadata_storage.sync_and_save(docs)
             log_event("INFO", "UPDATE", f"id={id}")
             return doc
     raise HTTPException(status_code=404, detail="Document not found")
 
 @router.delete("/{id}", status_code=200)
 def delete_document(id: int):
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     for idx, doc in enumerate(docs):
         if doc["id"] == id:
             file_path = os.path.join(settings.storage.documents_dir, doc["stored_name"])
             if os.path.exists(file_path):
                 os.remove(file_path)
             docs.pop(idx)
-            save_all_metadata(docs)
+            metadata_storage.sync_and_save(docs)
             log_event("INFO", "DELETE", f"id={id}")
             return {"detail": "Document successfully deleted"}
     raise HTTPException(status_code=404, detail="Document not found")
 
 @router.get("/{id}/integrity")
 def check_document_integrity(id: int):
-    docs = load_all_metadata()
+    docs = metadata_storage.get_all()
     for doc in docs:
         if doc["id"] == id:
             file_path = os.path.join(settings.storage.documents_dir, doc["stored_name"])
