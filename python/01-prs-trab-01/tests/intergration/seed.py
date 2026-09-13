@@ -2,6 +2,7 @@ import httpx
 import os
 import zlib
 import struct
+import json
 from io import BytesIO
 
 BASE_URL = "http://127.0.0.1:8000"
@@ -41,24 +42,24 @@ def generate_real_png():
     return png
 
 artifacts = [
-    {"filename": "quantum_simulation_v1.py", "category": "scripts", "project": "Quantum Computing", "researcher": "Dr. Alan Turing", "artifact_type": "Script", "research_stage": "Analysis", "reference_date": "2026-01-15", "content": b"print('Simulation version 1.0')"},
-    {"filename": "quantum_dataset.csv", "category": "data", "project": "Quantum Computing", "researcher": "Dr. Alan Turing", "artifact_type": "Dataset", "research_stage": "Data Collection", "reference_date": "2026-02-10", "content": b"timestamp,metric\n1,0.95\n2,0.98"},
-    {"filename": "quantum_final_report.pdf", "category": "reports", "project": "Quantum Computing", "researcher": "Dr. Alan Turing", "artifact_type": "Report", "research_stage": "Writing", "reference_date": "2026-03-01", "content": generate_real_pdf("Relatorio Final - Computacao Quantica - Dr. Alan Turing")},
+    {"filename": "quantum_simulation_v1.py", "project": "Quantum Computing", "researcher": "Dr. Alan Turing", "description": "Auto inferred script file", "content": b"print('Simulation version 1.0')"},
+    {"filename": "quantum_dataset.csv", "project": "Quantum Computing", "researcher": "Dr. Alan Turing", "description": "Auto inferred dataset csv file", "content": b"timestamp,metric\n1,0.95\n2,0.98"},
+    {"filename": "quantum_final_report.pdf", "project": "Quantum Computing", "researcher": "Dr. Alan Turing", "description": "Auto inferred report pdf file", "content": generate_real_pdf("Relatorio Final - Computacao Quantica - Dr. Alan Turing")},
     
-    {"filename": "dna_sequencing_data.csv", "category": "data", "project": "Genomics Research", "researcher": "Dr. Rosalind Franklin", "artifact_type": "Dataset", "research_stage": "Data Collection", "reference_date": "2026-04-12", "content": b"gene_id,sequence\nAGTC01,ATCGGCTA"},
-    {"filename": "crispr_analysis.py", "category": "scripts", "project": "Genomics Research", "researcher": "Dr. Rosalind Franklin", "artifact_type": "Script", "research_stage": "Analysis", "reference_date": "2026-05-20", "content": b"print('CRISPR analysis setup')"},
-    {"filename": "gel_electrophoresis.png", "category": "images", "project": "Genomics Research", "researcher": "Dr. Rosalind Franklin", "artifact_type": "Image", "research_stage": "Review", "reference_date": "2026-05-25", "content": generate_real_png()},
-    {"filename": "genomics_draft.txt", "category": "reports", "project": "Genomics Research", "researcher": "Dr. Rosalind Franklin", "artifact_type": "Report", "research_stage": "Writing", "reference_date": "2026-06-02", "content": b"Draft text for genomics publication..."},
+    {"filename": "dna_sequencing_data.csv", "project": "Genomics Research", "researcher": "Dr. Rosalind Franklin", "description": "Inferred data mapping structure", "content": b"gene_id,sequence\nAGTC01,ATCGGCTA"},
+    {"filename": "crispr_analysis.py", "project": "Genomics Research", "researcher": "Dr. Rosalind Franklin", "description": "Inferred code analyzer block", "content": b"print('CRISPR analysis setup')"},
+    {"filename": "gel_electrophoresis.png", "project": "Genomics Research", "researcher": "Dr. Rosalind Franklin", "description": "Inferred graphics simulation map", "content": generate_real_png()},
+    {"filename": "genomics_draft.txt", "project": "Genomics Research", "researcher": "Dr. Rosalind Franklin", "description": "Inferred plain text document writeup", "content": b"Draft text for genomics publication..."},
     
-    {"filename": "climate_temp_series.csv", "category": "data", "project": "Climate Change Analytics", "researcher": "Prof. Svante Arrhenius", "artifact_type": "Dataset", "research_stage": "Data Collection", "reference_date": "2026-01-20", "content": b"year,anomaly\n2024,1.2\n2025,1.3"},
-    {"filename": "satellite_map.png", "category": "images", "project": "Climate Change Analytics", "researcher": "Prof. Svante Arrhenius", "artifact_type": "Image", "research_stage": "Data Collection", "reference_date": "2026-02-15", "content": generate_real_png()},
-    {"filename": "predictive_model.py", "category": "scripts", "project": "Climate Change Analytics", "researcher": "Prof. Svante Arrhenius", "artifact_type": "Script", "research_stage": "Analysis", "reference_date": "2026-03-10", "content": b"def predict_temp(year): return year * 0.02"},
-    {"filename": "annual_climate_review.pdf", "category": "reports", "project": "Climate Change Analytics", "researcher": "Prof. Svante Arrhenius", "artifact_type": "Report", "research_stage": "Review", "reference_date": "2026-04-05", "content": generate_real_pdf("Revisao Climatica Anual - Prof. Svante Arrhenius")},
+    {"filename": "climate_temp_series.csv", "project": "Climate Change Analytics", "researcher": "Prof. Svante Arrhenius", "description": "Inferred environment logging table", "content": b"year,anomaly\n2024,1.2\n2025,1.3"},
+    {"filename": "satellite_map.png", "project": "Climate Change Analytics", "researcher": "Prof. Svante Arrhenius", "description": "Inferred weather mapping capture", "content": generate_real_png()},
+    {"filename": "predictive_model.py", "project": "Climate Change Analytics", "researcher": "Prof. Svante Arrhenius", "description": "Inferred math python execution file", "content": b"def predict_temp(year): return year * 0.02"},
+    {"filename": "annual_climate_review.pdf", "project": "Climate Change Analytics", "researcher": "Prof. Svante Arrhenius", "description": "Inferred publication review file", "content": generate_real_pdf("Revisao Climatica Anual - Prof. Svante Arrhenius")},
     
-    {"filename": "hubble_deep_field.png", "category": "images", "project": "Deep Space Observation", "researcher": "Dr. Edwin Hubble", "artifact_type": "Image", "research_stage": "Data Collection", "reference_date": "2026-07-19", "content": generate_real_png()},
-    {"filename": "galaxy_redshift.csv", "category": "data", "project": "Deep Space Observation", "researcher": "Dr. Edwin Hubble", "artifact_type": "Dataset", "research_stage": "Analysis", "reference_date": "2026-08-01", "content": b"galaxy,redshift\nNGC123,0.015"},
-    {"filename": "spectrometry_script.py", "category": "scripts", "project": "Deep Space Observation", "researcher": "Dr. Edwin Hubble", "artifact_type": "Script", "research_stage": "Analysis", "reference_date": "2026-08-22", "content": b"print('Spectrometry parsing data')"},
-    {"filename": "astrophysics_paper.pdf", "category": "reports", "project": "Deep Space Observation", "researcher": "Dr. Edwin Hubble", "artifact_type": "Report", "research_stage": "Writing", "reference_date": "2026-09-05", "content": generate_real_pdf("Artigo Cientifico - Astrofisica - Dr. Edwin Hubble")}
+    {"filename": "hubble_deep_field.png", "project": "Deep Space Observation", "researcher": "Dr. Edwin Hubble", "description": "Inferred astronomical matrix array", "content": generate_real_png()},
+    {"filename": "galaxy_redshift.csv", "project": "Deep Space Observation", "researcher": "Dr. Edwin Hubble", "description": "Inferred tabular measurement chart", "content": b"galaxy,redshift\nNGC123,0.015"},
+    {"filename": "spectrometry_script.py", "project": "Deep Space Observation", "researcher": "Dr. Edwin Hubble", "description": "Inferred calculation engineering file", "content": b"print('Spectrometry parsing data')"},
+    {"filename": "astrophysics_paper.pdf", "project": "Deep Space Observation", "researcher": "Dr. Edwin Hubble", "description": "Inferred manuscript final submission file", "content": generate_real_pdf("Artigo Cientifico - Astrofisica - Dr. Edwin Hubble")}
 ]
 
 def seed_database():
@@ -66,20 +67,20 @@ def seed_database():
     
     with httpx.Client() as client:
         for index, art in enumerate(artifacts, start=1):
-            form_data = {
-                "category": art["category"],
-                "description": f"Arquivo de teste número {index} correspondente ao artefato {art['filename']}",
+            metadata_payload = {
                 "project": art["project"],
                 "researcher": art["researcher"],
-                "artifact_type": art["artifact_type"],
-                "research_stage": art["research_stage"],
-                "reference_date": art["reference_date"]
+                "description": art["description"]
+            }
+            
+            form_data = {
+                "metadata": json.dumps(metadata_payload)
             }
             files = {"file": (art["filename"], art["content"])}
             
             response = client.post(f"{BASE_URL}/documents", data=form_data, files=files)
             if response.status_code == 201:
-                print(f"Sucesso [{index}/15]: Upload de '{art['filename']}' concluído com binário real.")
+                print(f"Sucesso [{index}/15]: Upload de '{art['filename']}' concluído com metadados enxutos via JSON.")
             else:
                 print(f"Erro no upload de '{art['filename']}': {response.text}")
                 return
@@ -100,7 +101,7 @@ def seed_database():
         backup_res = client.post(f"{BASE_URL}/operations/backup/project?project=Genomics Research")
         print("Resultado do backup seletivo:", backup_res.json())
 
-        print("\nTodos os testes foram injetados")
+        print("\nTodos os testes foram injetados com sucesso pelas duas novas regras combinadas!")
 
 if __name__ == "__main__":
     try:

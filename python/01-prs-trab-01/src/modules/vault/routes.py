@@ -1,7 +1,9 @@
 import os
+import json
 from datetime import datetime
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Query
 from fastapi.responses import FileResponse
+from pydantic import ValidationError
 from typing import List, Optional
 
 from src.config.settings import settings
@@ -12,17 +14,26 @@ from src.modules.vault.service import load_all_metadata, save_all_metadata, save
 
 router = APIRouter(prefix="/documents", tags=["Documents Vault"])
 
+EXTENSION_MAP = {
+    ".py": {"category": "scripts", "artifact_type": "Script", "research_stage": "Analysis"},
+    ".csv": {"category": "data", "artifact_type": "Dataset", "research_stage": "Data Collection"},
+    ".pdf": {"category": "reports", "artifact_type": "Report", "research_stage": "Writing"},
+    ".txt": {"category": "reports", "artifact_type": "Report", "research_stage": "Writing"},
+    ".png": {"category": "images", "artifact_type": "Image", "research_stage": "Review"},
+    ".jpg": {"category": "images", "artifact_type": "Image", "research_stage": "Review"},
+    ".jpeg": {"category": "images", "artifact_type": "Image", "research_stage": "Review"}
+}
+
 @router.post("", response_model=DocumentMetadata, status_code=201)
 async def upload_document(
     file: UploadFile = File(...),
-    category: str = Form(...),
-    description: str = Form(...),
-    project: str = Form(...),
-    researcher: str = Form(...),
-    artifact_type: str = Form(...),
-    research_stage: str = Form(...),
-    reference_date: str = Form(...)
+    metadata: str = Form(...)
 ):
+    try:
+        metadata_dict = json.loads(metadata)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON format in metadata field.")
+
     content = await file.read()
     size = len(content)
     
@@ -39,23 +50,29 @@ async def upload_document(
 
     await save_secure_file(content, stored_name)
 
-    new_doc = DocumentMetadata(
-        id=next_id,
-        original_name=file.filename,
-        stored_name=stored_name,
-        extension=ext,
-        mime_type=file.content_type or "application/octet-stream",
-        size=size,
-        category=category,
-        description=description,
-        upload_date=datetime.now().isoformat(),
-        sha256=sha256_value,
-        project=project,
-        researcher=researcher,
-        artifact_type=artifact_type,
-        research_stage=research_stage,
-        reference_date=reference_date
-    )
+    inferred_defaults = EXTENSION_MAP.get(ext.lower(), {"category": "others", "artifact_type": "Unknown", "research_stage": "Unknown"})
+
+    system_fields = {
+        "id": next_id,
+        "original_name": file.filename,
+        "stored_name": stored_name,
+        "extension": ext,
+        "mime_type": file.content_type or "application/octet-stream",
+        "size": size,
+        "upload_date": datetime.now().isoformat(),
+        "sha256": sha256_value,
+        "category": metadata_dict.get("category") or inferred_defaults["category"],
+        "artifact_type": metadata_dict.get("artifact_type") or inferred_defaults["artifact_type"],
+        "research_stage": metadata_dict.get("research_stage") or inferred_defaults["research_stage"],
+        "reference_date": metadata_dict.get("reference_date") or datetime.now().strftime("%Y-%m-%d")
+    }
+    
+    complete_data = {**metadata_dict, **system_fields}
+    
+    try:
+        new_doc = DocumentMetadata(**complete_data)
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=e.errors())
 
     metadata_list.append(new_doc.model_dump())
     save_all_metadata(metadata_list)
