@@ -1,28 +1,18 @@
+"""Dynamic environmental systems definitions loading manager engine."""
+
 import os
 import yaml
-from pydantic import BaseModel
 from pydantic_settings import BaseSettings
-
-class StorageConfig(BaseModel):
-    documents_dir: str
-    metadata_dir: str
-    backups_dir: str
-    logs_dir: str
-
-class UploadConfig(BaseModel):
-    max_size_mb: int
-
-class HashConfig(BaseModel):
-    algorithm: str
-
-class LoggingConfig(BaseModel):
-    file_path: str
-    level: str
-
-class BackupConfig(BaseModel):
-    format: str
+from src.config.schemas import (
+    StorageConfig,
+    UploadConfig,
+    HashConfig,
+    LoggingConfig,
+    BackupConfig,
+)
 
 class Settings(BaseSettings):
+    """Unified application settings metadata representation layout."""
     storage: StorageConfig
     upload: UploadConfig
     hash: HashConfig
@@ -31,13 +21,14 @@ class Settings(BaseSettings):
 
     @classmethod
     def load_settings(cls) -> "Settings":
+        """Load settings profiles mapping directly from raw external configuration data."""
         current_dir = os.path.dirname(os.path.abspath(__file__))
         src_dir = os.path.dirname(current_dir)
         yaml_path = os.path.join(src_dir, "config.yaml")
-        
+
         if not os.path.exists(yaml_path):
             raise FileNotFoundError(f"Configuration file {yaml_path} not found.")
-            
+
         with open(yaml_path, "r", encoding="utf-8") as f:
             config_data = yaml.safe_load(f)
         return cls(**config_data)

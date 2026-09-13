@@ -1,7 +1,7 @@
 import os
 import json
 from typing import List
-from src.config.settings import settings
+from src.config import settings
 
 METADATA_FILE = os.path.join(settings.storage.metadata_dir, "documents.json")
 

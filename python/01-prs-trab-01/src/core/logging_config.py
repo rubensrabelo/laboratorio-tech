@@ -1,5 +1,6 @@
 import logging
-from src.config.settings import settings
+from src.config import settings
+
 
 def setup_logging():
     logging.basicConfig(
@@ -9,10 +10,11 @@ def setup_logging():
         datefmt="%Y-%m-%d %H:%M:%S"
     )
 
+
 def log_event(level: str, operation: str, details: str):
     logger = logging.getLogger("science_vault")
     message = f"{operation} {details}"
-    
+
     if level.upper() == "INFO":
         logger.info(message)
     elif level.upper() == "WARNING":
