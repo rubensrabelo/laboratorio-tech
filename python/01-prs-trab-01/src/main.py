@@ -1,22 +1,24 @@
+"""Application entrypoint server initializations configurations layer."""
+
 from fastapi import FastAPI
-from src.core.logging_config import setup_logging, log_event
-from src.modules.vault.routes import router as vault_router
-from src.modules.operations.routes import router as operations_router
+from src.core import setup_logging, log_event
+from src.modules import api_router
 
 app = FastAPI(
     title="Science Research Artifacts Vault API",
-    description="Modular monolith digital secure repository tailored for scientific research preservation.",
+    description="Modular monolith digital secure repository.",
     version="1.0.0"
 )
 
 setup_logging()
-log_event("INFO", "SYSTEM_START", "Vault application ecosystem successfully initialized.")
+log_event("INFO", "SYSTEM_START", "Application ecosystem initialized.")
 
-app.include_router(vault_router)
-app.include_router(operations_router)
+app.include_router(api_router)
+
 
 @app.get("/")
 def root():
+    """Root server context mapping diagnostic checks profiles entries."""
     return {
         "status": "online",
         "system": "Science Research Artifacts Vault",

@@ -1,26 +1,32 @@
+"""Operations module routing controllers for system statistics and archival backups."""
+
 import os
+from collections import Counter
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import Response
-from collections import Counter
 
 from src.config.settings import settings
-from src.core.logging_config import log_event
-from src.core.database import metadata_storage
-from src.core.security import calculate_sha256
-from src.modules.operations.service import generate_csv_report, create_global_zip_backup, create_selective_project_backup
+from src.core import log_event, metadata_storage, calculate_sha256
+from src.modules.operations.service import (
+    generate_csv_report,
+    create_global_zip_backup,
+    create_selective_project_backup,
+)
 
 router = APIRouter(prefix="/operations", tags=["System Operations"])
 
+
 @router.get("/stats")
 def get_vault_statistics():
+    """Compute and compile aggregate distribution metrics across all repository artifacts."""
     docs = metadata_storage.get_all()
     total_docs = len(docs)
     total_size = sum([d["size"] for d in docs])
-    
+
     extensions = Counter([d["extension"] for d in docs])
     categories = Counter([d["category"] for d in docs])
     projects = Counter([d["project"] for d in docs])
-    
+
     return {
         "total_documents": total_docs,
         "space_utilized_bytes": total_size,
@@ -29,17 +35,23 @@ def get_vault_statistics():
         "by_project": dict(projects)
     }
 
+
 @router.get("/integrity-check")
 def global_integrity_check():
+    """Perform ecosystem scans comparing physical entity hashes against
+    ledger snapshots signatures."""
     docs = metadata_storage.get_all()
     verified = 0
     intact = 0
     altered = 0
     missing = 0
-    
+
     for d in docs:
         verified += 1
-        file_path = os.path.join(settings.storage.documents_dir, d["stored_name"])
+        file_path = os.path.join(
+            settings.storage.documents_dir,
+            d["stored_name"]
+        )
         if not os.path.exists(file_path):
             missing += 1
             continue
@@ -49,7 +61,7 @@ def global_integrity_check():
             intact += 1
         else:
             altered += 1
-            
+
     return {
         "documents_verified": verified,
         "documents_intact": intact,
@@ -57,33 +69,62 @@ def global_integrity_check():
         "missing_physical_files": missing
     }
 
+
 @router.get("/export/csv")
 def export_catalog_as_csv():
+    """Stream tabular flat text representations wrapping whole active
+    repository tracking records."""
     csv_data = generate_csv_report()
     log_event("INFO", "CSV_EXPORT", "Exported catalogue database successfully")
     return Response(
-        content=csv_data, 
-        media_type="text/csv", 
-        headers={"Content-Disposition": "attachment; filename=catalog.csv"}
+        content=csv_data,
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=catalog.csv"
+        }
     )
+
 
 @router.post("/backup")
 def trigger_global_backup():
+    """Trigger full structural compression jobs targeting active storage directories pools."""
     filename = create_global_zip_backup()
     log_event("INFO", "GLOBAL_BACKUP", f"Created general backup: {filename}")
-    return {"message": "Global backup successfully created", "filename": filename}
+    return {
+        "message": "Global backup successfully created",
+        "filename": filename
+    }
+
 
 @router.post("/backup/project")
 def trigger_project_selective_backup(project: str = Query(...)):
+    """Isolate project specific files clusters generating dedicated secure zip archival
+    snapshots."""
     filename = create_selective_project_backup(project)
     if not filename:
-        log_event("WARNING", "BACKUP_FAILED", f"No documents found for project: {project}")
-        raise HTTPException(status_code=404, detail=f"No documents registered for project '{project}'")
-    log_event("INFO", "PROJECT_BACKUP", f"Created selective backup for {project}: {filename}")
-    return {"message": "Selective project backup successfully created", "filename": filename}
+        log_event(
+            "WARNING",
+            "BACKUP_FAILED",
+            f"No documents found for project: {project}"
+        )
+        raise HTTPException(
+            status_code=404,
+            detail=f"No documents registered for project '{project}'"
+        )
+    log_event(
+        "INFO",
+        "PROJECT_BACKUP",
+        f"Created selective backup for {project}: {filename}"
+    )
+    return {
+        "message": "Selective project backup successfully created",
+        "filename": filename
+    }
+
 
 @router.get("/backups")
 def list_available_backups():
+    """Scan archive pools providing inventories mapping current localized active backup entities."""
     files = os.listdir(settings.storage.backups_dir)
     backup_list = []
     for f in files:

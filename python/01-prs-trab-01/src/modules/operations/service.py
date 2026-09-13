@@ -1,21 +1,25 @@
+"""Operations module services for generating reports and handling zip backup processes."""
+
 import os
 import csv
 import zipfile
 from io import StringIO
 from datetime import datetime
-from src.config.settings import settings
-from src.core.database import metadata_storage
+from src.config import settings
+from src.core import metadata_storage
+
 
 def generate_csv_report() -> str:
+    """Generate a structured CSV report containing all scientific artifact metadata records."""
     docs = metadata_storage.get_all()
     output = StringIO()
     writer = csv.writer(output)
-    
+
     writer.writerow([
         "id", "original_name", "extension", "category", "size", 
         "upload_date", "sha256", "project", "researcher", "artifact_type"
     ])
-    
+
     for d in docs:
         writer.writerow([
             d["id"], d["original_name"], d["extension"], d["category"], d["size"], 
@@ -23,11 +27,13 @@ def generate_csv_report() -> str:
         ])
     return output.getvalue()
 
+
 def create_global_zip_backup() -> str:
+    """Create a global compressed ZIP archive containing every physical file stored in the vault."""
     timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
     backup_filename = f"backup_{timestamp}.zip"
     backup_path = os.path.join(settings.storage.backups_dir, backup_filename)
-    
+
     docs = metadata_storage.get_all()
     with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for d in docs:
@@ -36,18 +42,24 @@ def create_global_zip_backup() -> str:
                 zipf.write(file_path, arcname=d["stored_name"])
     return backup_filename
 
+
 def create_selective_project_backup(project_name: str) -> str:
+    """Create a selective ZIP backup containing only physical files
+    from a specific research project."""
     timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-    safe_project_name = "".join([c for c in project_name if c.isalnum() or c in (' ', '_', '-')]).rstrip()
+    safe_project_name = (
+        "".join(
+            [c for c in project_name if c.isalnum() or c in (' ', '_', '-')]).rstrip()
+        )
     backup_filename = f"backup_project_{safe_project_name.replace(' ', '_')}_{timestamp}.zip"
     backup_path = os.path.join(settings.storage.backups_dir, backup_filename)
-    
+
     docs = metadata_storage.get_all()
     filtered_docs = [d for d in docs if d["project"].lower() == project_name.lower()]
-    
+
     if not filtered_docs:
         return ""
-        
+
     with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for d in filtered_docs:
             file_path = os.path.join(settings.storage.documents_dir, d["stored_name"])

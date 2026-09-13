@@ -1,7 +1,12 @@
-from pydantic import BaseModel
+"""Vault module data models representing scientific research artifact attributes schemas."""
+
 from typing import Optional
+from pydantic import BaseModel
+
 
 class DocumentMetadata(BaseModel):
+    """Unified application settings metadata representation layout."""
+
     id: int
     original_name: str
     stored_name: str
@@ -18,7 +23,10 @@ class DocumentMetadata(BaseModel):
     research_stage: str
     reference_date: str
 
+
 class DocumentUpdate(BaseModel):
+    """Data transfer schema representing editable document properties validation rules."""
+
     category: Optional[str] = None
     description: Optional[str] = None
     project: Optional[str] = None
