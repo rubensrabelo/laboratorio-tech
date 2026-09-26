@@ -45,7 +45,7 @@ source .venv/bin/activate
 
 ### 4. Executar a aplicação
 ```bash
-uvicorn main:app --reload
+uvicorn src.main:app # --reload # caso você queira que atualize a cada mudança
 ```
 A API estará disponível em `http://127.0.0.1:8000`. A documentação interativa Swagger poderá ser acessada em `http://127.0.0`.
 
